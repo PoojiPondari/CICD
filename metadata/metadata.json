@@ -1,0 +1,34 @@
+{
+  "build": {
+    "version": "1.0",
+    "date": "2023-10-01",
+    "toolchain": {
+      "name": "arm-none-eabi-gcc",
+      "version": "10.3.1"
+    },
+    "environment": {
+      "os": "Ubuntu 20.04",
+      "architecture": "x86_64"
+    }
+  },
+  "artifacts": {
+    "firmware": {
+      "name": "firmware.bin",
+      "size": "2048KB",
+      "hash": "sha256:abcd1234efgh5678ijkl9101mnopqrstuvwx2345yz"
+    }
+  },
+  "dependencies": [
+    {
+      "name": "Zephyr",
+      "version": "2.6.0",
+      "license": "Apache-2.0"
+    },
+    {
+      "name": "CMSIS",
+      "version": "5.7.0",
+      "license": "MIT"
+    }
+  ],
+  "notes": "This metadata file is a sample and should be updated with actual build information."
+}

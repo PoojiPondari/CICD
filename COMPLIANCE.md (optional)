@@ -1,0 +1,31 @@
+# Compliance Guidelines for the Embedded DevOps Coding Challenge
+
+## Overview
+This document outlines the compliance requirements and guidelines for the Embedded DevOps Coding Challenge project. Adhering to these guidelines ensures that the project meets industry standards and legal requirements.
+
+## Licensing
+- All code and documentation must comply with the licensing terms specified in the LICENSE file.
+- Ensure that any third-party libraries or tools used in the project are properly licensed and attributed.
+
+## Software Bill of Materials (SBOM)
+- A Software Bill of Materials (SBOM) is provided in the `metadata/sbom.spdx.json` file.
+- Ensure that all components listed in the SBOM are compliant with their respective licenses.
+
+## Code Quality
+- Follow best practices for coding standards and documentation.
+- Ensure that all code is thoroughly tested and passes the CI pipeline defined in `.github/workflows/ci.yml`.
+
+## Security
+- Regularly review dependencies for vulnerabilities.
+- Ensure that sensitive information (e.g., API keys, passwords) is not hardcoded in the source code.
+
+## Contribution Guidelines
+- All contributions to the project must adhere to the project's coding standards and compliance requirements.
+- Contributors should sign off on their commits to indicate compliance with the project's guidelines.
+
+## Reporting Compliance Issues
+- Any compliance-related issues should be reported to the project maintainers immediately.
+- Use the GitHub Issues tab to document and track compliance concerns.
+
+## Conclusion
+By following these compliance guidelines, contributors can help ensure that the Embedded DevOps Coding Challenge project is robust, secure, and legally compliant.

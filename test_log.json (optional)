@@ -1,0 +1,31 @@
+{
+  "tests": [
+    {
+      "test_id": "test_001",
+      "description": "Initial firmware build test",
+      "status": "passed",
+      "timestamp": "2023-10-01T12:00:00Z",
+      "logs": "Build completed successfully without errors."
+    },
+    {
+      "test_id": "test_002",
+      "description": "Firmware functionality test",
+      "status": "failed",
+      "timestamp": "2023-10-01T12:30:00Z",
+      "logs": "Error: Unexpected behavior in module X."
+    },
+    {
+      "test_id": "test_003",
+      "description": "Integration test with peripheral Y",
+      "status": "passed",
+      "timestamp": "2023-10-01T13:00:00Z",
+      "logs": "Integration with peripheral Y successful."
+    }
+  ],
+  "summary": {
+    "total_tests": 3,
+    "passed": 2,
+    "failed": 1,
+    "timestamp": "2023-10-01T13:30:00Z"
+  }
+}

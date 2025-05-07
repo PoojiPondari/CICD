@@ -1,0 +1,28 @@
+{
+  "spdxVersion": "SPDX-2.2",
+  "dataLicense": "CC0-1.0",
+  "documentNamespace": "http://spdx.org/spdxdocs/embedded-devops-coding-challenge-template-sbom",
+  "name": "Embedded DevOps Coding Challenge Template SBOM",
+  "shortDescription": "Software Bill of Materials for the Embedded DevOps Coding Challenge Template",
+  "creationInfo": {
+    "created": "2023-10-01T00:00:00Z",
+    "creators": [
+      "Tool: SPDX Generator"
+    ]
+  },
+  "packages": [
+    {
+      "packageName": "example-firmware",
+      "spdxID": "pkg:example-firmware",
+      "version": "1.0.0",
+      "downloadLocation": "NOASSERTION",
+      "licenseConcluded": "Apache-2.0",
+      "licenseInfoFromFiles": [
+        "Apache-2.0"
+      ],
+      "filesAnalyzed": false
+    }
+  ],
+  "relationships": [],
+  "annotations": []
+}

@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up ARM toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-arm-none-eabi
+
+      - name: Build project
+        run: |
+          cd project
+          make
+
+      - name: Export SBOM
+        run: |
+          cd metadata
+          spdx-tools spdx2json sbom.spdx.json
+
+      - name: Hash artifact
+        run: |
+          sha256sum project/firmware.bin > metadata/firmware.sha256
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: build-artifacts
+          path: |
+            project/firmware.bin
+            metadata/sbom.spdx.json
+            metadata/firmware.sha256
