@@ -74,7 +74,7 @@ jobs:
           zip ../firmware_artifacts.zip zephyr.elf hello_world.log firmware.sha256 build_metadata.json spdx_sbom.json
 
       - name: 💾 Upload firmware artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: zephyr-firmware-artifacts
           path: build/firmware_artifacts.zip
