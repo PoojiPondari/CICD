@@ -1,0 +1,6 @@
+-- west build: running target run
+[0/1] To exit from QEMU enter: 'CTRL+a, x'[QEMU] CPU: cortex-m3
+*** Booting Zephyr OS build v4.1.0-3702-ged4222e238bf ***
+Hello World! qemu_cortex_m3/ti_lm3s6965
+QEMU: Terminated
+

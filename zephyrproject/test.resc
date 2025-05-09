@@ -1,0 +1,11 @@
+using sysbus
+mach create "zephyr_m3"
+machine LoadPlatformDescription @platforms/cpus/cortex-m3.repl
+
+sysbus LoadELF @build/zephyr/zephyr.elf
+
+uart = sysbus.uart0
+showAnalyzer uart
+
+start
+
