@@ -45,10 +45,23 @@ jobs:
           if [ ! -f zephyrproject/.west/config ]; then
             west init zephyrproject
           fi
+          
+      - name: 📁 Initialize Zephyr workspace
+        run: |
+          if [ ! -f zephyrproject/.west/config ]; then
+            west init zephyrproject
+          fi
+
+      - name: ✅ Fix west manifest path
+        run: |
+          cd zephyrproject
+          west config manifest.path .
+
+      - name: 📥 West Update and Export
+        run: |
           cd zephyrproject
           west update
           west zephyr-export
-
 
 
       - name: 🏗️ Build for qemu_cortex_m3
