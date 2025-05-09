@@ -1,0 +1,39 @@
+# Ignore all build outputs
+build/
+
+# Zephyr SDK temporary files
+*.pyc
+__pycache__/
+*.log
+*.bin
+*.elf
+*.hex
+*.map
+
+# CMake intermediate files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# Ninja build system
+*.ninja
+.ninja_deps
+.ninja_log
+
+# VS Code settings (optional)
+.vscode/
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Git backup files
+*~
+*.swp
+*.swo
+*.bak
+
+# Python virtualenv (optional)
+.venv/
+venv/
