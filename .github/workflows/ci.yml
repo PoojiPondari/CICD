@@ -1,45 +1,80 @@
-name: CI
+name: Zephyr CI with Artifact Traceability
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
   pull_request:
-    branches:
-      - main
+    branches: [ main ]
 
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+
+    env:
+      ZEPHYR_TOOLCHAIN_VARIANT: zephyr
+      ZEPHYR_SDK_INSTALL_DIR: ${{ github.workspace }}/zephyr-sdk
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - name: ✨ Checkout source code
+        uses: actions/checkout@v4
 
-      - name: Set up ARM toolchain
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y gcc-arm-none-eabi
-
-      - name: Build project
-        run: |
-          cd project
-          make
-
-      - name: Export SBOM
-        run: |
-          cd metadata
-          spdx-tools spdx2json sbom.spdx.json
-
-      - name: Hash artifact
-        run: |
-          sha256sum project/firmware.bin > metadata/firmware.sha256
-
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v2
+      - name: 🎓 Set up Python and west
+        uses: actions/setup-python@v4
         with:
-          name: build-artifacts
+          python-version: '3.10'
+
+      - name: 🧬 Install dependencies and west
+        run: |
+          pip install west
+          sudo apt update && sudo apt install -y ninja-build gperf ccache dfu-util device-tree-compiler qemu-system-arm jq python3-pip
+          pip install spdx-tools
+
+      - name: 🚧 Cache Zephyr modules and SDK
+        uses: actions/cache@v3
+        with:
           path: |
-            project/firmware.bin
-            metadata/sbom.spdx.json
-            metadata/firmware.sha256
+            zephyrproject/
+            ${{ env.ZEPHYR_SDK_INSTALL_DIR }}
+          key: zephyr-sdk-${{ runner.os }}-${{ hashFiles('west.yml') }}
+
+      - name: 📁 Initialize Zephyr workspace
+        run: |
+          west init -l .
+          west update
+          west zephyr-export
+
+      - name: 🏗️ Build for qemu_cortex_m3
+        run: |
+          west build -b qemu_cortex_m3 zephyr/samples/hello_world --pristine
+
+      - name: ⏱️ Run QEMU and capture UART
+        run: |
+          mkdir -p build/zephyr
+          west build -t run | tee build/zephyr/hello_world.log
+
+      - name: ✅ Validate UART output
+        run: |
+          grep "Hello World" build/zephyr/hello_world.log
+
+      - name: 🔐 Generate SHA256 and metadata
+        run: |
+          sha256sum build/zephyr/zephyr.elf > build/zephyr/firmware.sha256
+          echo "{\"git_sha\": \"$(git rev-parse --short HEAD)\", \"build_time\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\"}" > build/zephyr/build_metadata.json
+
+      - name: 📊 Generate SPDX SBOM (simplified)
+        run: |
+          echo '{"spdxVersion": "SPDX-2.3", "dataLicense": "CC0-1.0", "SPDXID": "SPDXRef-DOCUMENT", "name": "zephyr-firmware", "documentNamespace": "https://example.com/spdxdocs/zephyr-firmware-$(date +%s)", "creationInfo": {"created": "$(date -u +%Y-%m-%dT%H:%M:%SZ)", "creators": ["Tool: github-ci"]}}' > build/zephyr/spdx_sbom.json
+
+      - name: 📂 Zip firmware and logs
+        run: |
+          cd build/zephyr
+          zip ../firmware_artifacts.zip zephyr.elf hello_world.log firmware.sha256 build_metadata.json spdx_sbom.json
+
+      - name: 💾 Upload firmware artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: zephyr-firmware-artifacts
+          path: build/firmware_artifacts.zip
