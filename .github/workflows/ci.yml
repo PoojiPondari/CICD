@@ -42,9 +42,11 @@ jobs:
 
       - name: 📁 Initialize Zephyr workspace
         run: |
-          west init -l .
+          west init zephyrproject
+          cd zephyrproject
           west update
           west zephyr-export
+
 
       - name: 🏗️ Build for qemu_cortex_m3
         run: |
