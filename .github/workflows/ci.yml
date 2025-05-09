@@ -14,10 +14,10 @@ jobs:
       QEMU_BIN_PATH: /usr/bin
 
     steps:
-    - name: ⬇️ Checkout repository
+    - name: ⬇️ Checkout repo
       uses: actions/checkout@v4
 
-    - name: 🛠️ Install build dependencies
+    - name: 🛠️ Install dependencies
       run: |
         sudo apt update
         sudo apt install -y cmake ninja-build gperf ccache dfu-util device-tree-compiler wget \
@@ -28,13 +28,10 @@ jobs:
     - name: 📦 Install Zephyr SDK
       run: |
         wget https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v0.16.3/zephyr-sdk-0.16.3_linux-x86_64.tar.xz
-        tar -xf zephyr-sdk-0.16.3_linux-x86_64.tar.xz
+        tar xvf zephyr-sdk-0.16.3_linux-x86_64.tar.xz
         mv zephyr-sdk-0.16.3 $ZEPHYR_SDK_INSTALL_DIR
         $ZEPHYR_SDK_INSTALL_DIR/setup.sh -t all -c
-    
-    - name: 🔍 List repo structure for debug
-      run: ls -R
-    
+
     - name: 🔧 Build Zephyr Firmware
       working-directory: zephyrproject
       run: |
@@ -42,7 +39,7 @@ jobs:
         west zephyr-export
         west build -b qemu_cortex_m3 zephyr/samples/hello_world --pristine
 
-    - name: 🚀 Run Firmware in QEMU
+    - name: 🚀 Simulate with QEMU
       working-directory: zephyrproject
       run: |
         west build -t run
@@ -50,13 +47,12 @@ jobs:
     - name: 🧾 Generate SBOM, hash, metadata
       working-directory: zephyrproject
       run: |
-        mkdir -p metadata
         curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b . v0.100.0
         ./syft dir:build/zephyr --output spdx-json > metadata/firmware.spdx.json
         sha256sum build/zephyr/zephyr.elf > metadata/firmware.sha256
         echo "{\"git_sha\": \"$(git rev-parse --short HEAD)\", \"build_time\": \"$(date -u +"%Y-%m-%dT%H:%M:%SZ")\"}" > metadata/build_metadata.json
 
-    - name: 📤 Upload Firmware Artifacts
+    - name: 📤 Upload artifacts
       uses: actions/upload-artifact@v4
       with:
         name: zephyr-artifacts
