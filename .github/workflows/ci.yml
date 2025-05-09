@@ -40,12 +40,15 @@ jobs:
             ${{ env.ZEPHYR_SDK_INSTALL_DIR }}
           key: zephyr-sdk-${{ runner.os }}-${{ hashFiles('west.yml') }}
 
-      - name: 📁 Initialize Zephyr workspace
+      - name: 📁 Initialize Zephyr workspace (skip if already done)
         run: |
-          west init zephyrproject
+          if [ ! -f zephyrproject/.west/config ]; then
+            west init zephyrproject
+          fi
           cd zephyrproject
           west update
           west zephyr-export
+
 
 
       - name: 🏗️ Build for qemu_cortex_m3
